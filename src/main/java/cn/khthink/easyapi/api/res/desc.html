@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>EasyApi 接口文档</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="layui/css/kh.css">
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo"><a href="../api" class="layui-logo">EasyApi 接口文档首页</a></div>
+        <ul class="layui-nav layui-layout-left">
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item"><a href="http://khthink.cn">Khthink.cn</a></li>
+        </ul>
+    </div>
+    <div class="layui-container">
+        <div style="padding: 15px;">
+
+            <table class="layui-table" lay-size="lg">
+                <thead>
+                <tr>
+                    <th colspan="2">接口信息</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td style="text-align: center;">接口名称</td>
+                    <td><span id="actionname"></span></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">接口作者</td>
+                    <td><span id="auther"></span></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">接口说明</td>
+                    <td><span id="desc"></span></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">接口分组</td>
+                    <td><span id="group"></span></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">接口权限</td>
+                    <td><span id="power"></span></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">参数数量</td>
+                    <td><span id="count"></span></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">接口访问地址</td>
+                    <td><span id="url"></span></td>
+                </tr>
+                </tbody>
+            </table>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>请求参数</legend>
+                <div class="layui-field-box">
+                    <table id="apilist" class="layui-table" lay-size="lg">
+                    </table>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>返回参数</legend>
+                <div class="layui-field-box">
+                    <table id="returnlist" class="layui-table" lay-size="lg">
+                    </table>
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+
+    <div class="layui-footer">© khthink.cn</div>
+</div>
+<script src="layui/layui.js"></script>
+<script>
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+
+    var actionname = GetQueryString("action");
+    layui.use('table', function () {
+        var table = layui.table;
+        var returntable = layui.table;
+        table.render({
+            elem: '#apilist'
+            , height: '-'
+            , url: '/getapi?action=' + actionname
+            , page: false
+            , cols: [[
+                {field: 'param', title: '参数', unresize: true},
+                {field: 'type', title: '参数类型', unresize: true},
+                {field: 'need', title: '是否必须', unresize: true},
+                {field: 'param_desc', title: '说明', unresize: true},
+                {field: 'param_exmp', title: '例子', unresize: true}
+            ]]
+        });
+        returntable.render({
+            elem: '#returnlist'
+            , height: '-'
+            , url: '/getapi?action=' + actionname + "&r=returnp"
+            , page: false
+            , cols: [[
+                {field: 'param', title: '参数', unresize: true},
+                {field: 'type', title: '参数类型', unresize: true},
+                {field: 'need', title: '是否必须', unresize: true},
+                {field: 'param_desc', title: '说明', unresize: true},
+                {field: 'param_exmp', title: '例子', unresize: true}
+            ]]
+        });
+        var xmlhttp;
+        if (window.XMLHttpRequest) {
+            xmlhttp = new XMLHttpRequest();
+        }
+        else {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var result = JSON.parse(xmlhttp.responseText);
+                document.getElementById('actionname').innerHTML = result.actionname;
+                document.getElementById('auther').innerHTML = result.auther;
+                document.getElementById('desc').innerHTML = result.desc;
+                document.getElementById('group').innerHTML = result.group;
+                document.getElementById('power').innerHTML = result.power;
+                document.getElementById('count').innerHTML = result.count;
+                document.getElementById('url').innerHTML = "<a href='" + result.url + "'>" + result.url + "</a>";
+            }
+        }
+        xmlhttp.open("GET", "/getapi?action=" + actionname, true);
+        xmlhttp.send();
+
+    });
+</script>
+</body>
+</html>

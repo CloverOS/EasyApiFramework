@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>EasyApi 接口文档</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body onload="init()" class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo"><a href="./api" class="layui-logo">EasyApi 接口文档首页</a></div>
+        <ul class="layui-nav layui-layout-left">
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item"><a href="http://khthink.cn">Khthink.cn</a></li>
+        </ul>
+    </div>
+    <div class="layui-container">
+        <div class="layui-col-md3" style="padding: 15px;">
+            <table class="layui-table" id="apigrouplist">
+                <thead>
+                <tr>
+                    <th>
+                        接口分组
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="layui-col-md9" style="padding: 15px;">
+            <table id="apilist" class="layui-row layui-table" lay-size="sm">
+                <thead>
+                <tr>
+                    <th>
+                        接口名称
+                    </th>
+                    <th>
+                        接口标识
+                    </th>
+                    <th>
+                        说明
+                    </th>
+                    <th>
+                        作者
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="apilistbody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="layui-footer">© khthink.cn</div>
+</div>
+<script src="layui/layui.js"></script>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script>
+    function init() {
+        $.get("getapigroup", function (data, status) {
+            var datajson = eval('(' + data + ')');
+            var list = datajson.data;
+            for (var i = 0; i < list.length; i++) {
+                $("#apigrouplist").append("<tr><td><a href='#' onclick='actionlist(\"" + list[i].groupname + "\")' id='groupname'>" + list[i].groupname + "</a></td></tr>");
+            }
+        });
+        $.get("getapi", function (data, status) {
+            var datajson = eval('(' + data + ')');
+            var list = datajson.data;
+            for (var i = 0; i < list.length; i++) {
+                $("#apilist").append("<tr><td><a id='actionname' href='/res/desc.html?action=" + list[i].info.info + "'>" + list[i].actionname + "</a></td><td>" + list[i].info.tag + "</td><td>" + list[i].desc + "</td><td>" + list[i].auther + "</td></tr>");
+            }
+        });
+    }
+
+    function actionlist(groupname) {
+        $.get("getapi?group=" + groupname, function (data, status) {
+            var datajson = eval('(' + data + ')');
+            var list = datajson.data;
+            $("#apilistbody").empty();
+            for (var i = 0; i < list.length; i++) {
+                $("#apilist").append("<tr><td><a id='actionname' href='/res/desc.html?action=" + list[i].info.info + "'>" + list[i].actionname + "</a></td><td>" + list[i].info.tag + "</td><td>" + list[i].desc + "</td><td>" + list[i].auther + "</td></tr>");
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
