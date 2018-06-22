@@ -18,8 +18,9 @@ public interface Action extends Serializable {
 
     /**
      * 处理
-     * @param request
-     * @throws Exception
+     *
+     * @param request 请求
+     * @throws Exception 异常
      */
     void processData(Request request) throws Exception;
 

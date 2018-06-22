@@ -1,12 +1,35 @@
-group 'cn.khthink'
-version '1.0'
+group 'com.github.cloveros'
+version '1.0.0'
 
+apply plugin: 'idea'
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
 
 sourceCompatibility = 1.8
+compileJava.options.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
 }
 
 processResources {
@@ -20,8 +43,63 @@ jar {
     }
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'EasyApi'
+                packaging 'jar'
+                description 'A RESTFUL Framework for JavaWeb'
+                url 'https://github.com/CloverOS/EasyApiFramework'
+
+                scm {
+                    connection 'scm:git:git://github.com/CloverOS/EasyApiFramework.git'
+                    developerConnection 'scm:git:ssh://github.com:CloverOS/EasyApiFramework.git'
+                    url 'https://github.com/CloverOS/EasyApiFramework/tree/master'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'khthink'
+                        name 'kh'
+                        email '527756694@qq.com'
+                        organization 'Sonatype'
+                        organizationUrl 'http://www.sonatype.com'
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign configurations.archives
 }
 
 dependencies {

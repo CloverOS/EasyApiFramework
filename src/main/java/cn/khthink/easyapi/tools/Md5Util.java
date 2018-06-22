@@ -16,7 +16,7 @@ public class Md5Util {
      * 返回md5加密字符串(大小写)
      *
      * @param s 字符串
-     * @return
+     * @return String
      */
     public static String md5(String s) {
         return md5(s.getBytes());
@@ -26,7 +26,7 @@ public class Md5Util {
      * 返回小写MD5加密字符串
      *
      * @param s 字符串
-     * @return
+     * @return String
      */
     public static String md5LowerCase(String s) {
         return md5(s).toLowerCase();
@@ -37,7 +37,7 @@ public class Md5Util {
      * 返回md5加密字符串(大小写)
      *
      * @param btInput 字节
-     * @return
+     * @return String
      */
     public static String md5(byte[] btInput) {
         char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
@@ -62,7 +62,7 @@ public class Md5Util {
     /***
      * 随机生成n位数短信验证码(纯数字)
      * @param n 位数
-     * @return
+     * @return String
      */
     public static String getRandomTelVerify(int n) {
         Random random = new Random();
@@ -77,7 +77,7 @@ public class Md5Util {
     /***
      * 随机生成n位数验证码(a-z A-Z 0-9)
      * @param n 位数
-     * @return
+     * @return String
      */
     public static String getRandomImgVerify(int n) {
         String base = "abcdefghijklmnopqrstuvwxyzQWERTYUIOPASDFGHJKLZXCVBNM0123456789";

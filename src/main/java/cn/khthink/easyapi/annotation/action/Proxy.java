@@ -13,19 +13,19 @@ import java.lang.annotation.Target;
 public @interface Proxy {
     /**
      * 代理器名字
-     * @return
+     * @return String
      */
     String proxy();
 
     /**
      * 处理器标识
-     * @return
+     * @return String
      */
     String actionTag();
 
     /**
      * 代理目标处理器
-     * @return
+     * @return String
      */
     String actionName();
 }

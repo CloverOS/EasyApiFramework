@@ -14,9 +14,9 @@ public interface RequestData {
     /**
      * 获取请求数据
      *
-     * @param request
-     * @return
-     * @throws IOException
+     * @param request servlet请求
+     * @return JSONObject
+     * @throws IOException IO异常
      */
     JSONObject getDatas(HttpServletRequest request) throws IOException;
 }

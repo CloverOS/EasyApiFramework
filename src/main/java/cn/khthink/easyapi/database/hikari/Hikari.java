@@ -37,7 +37,7 @@ public class Hikari {
     /**
      * 获取数据源
      *
-     * @return
+     * @return HikariDataSource
      */
     public HikariDataSource getDataSource() {
         return ds;
@@ -46,8 +46,8 @@ public class Hikari {
     /**
      * 获取连接
      *
-     * @return
-     * @throws SQLException
+     * @return Connection
+     * @throws SQLException 数据库异常
      */
     public Connection getConnetion() throws SQLException {
         return ds.getConnection();

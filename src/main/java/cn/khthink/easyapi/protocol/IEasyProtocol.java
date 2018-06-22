@@ -17,7 +17,7 @@ public interface IEasyProtocol {
      * 协议验证
      *
      * @param request 请求
-     * @return
+     * @return boolean
      */
     boolean verify(Request request);
 }

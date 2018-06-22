@@ -63,7 +63,7 @@ public class EasyMybatis {
     /**
      * 添加mapper包
      *
-     * @param packageName
+     * @param packageName 包名
      */
     public void addMappers(String packageName) {
         if (sqlSessionFactory != null) {
@@ -74,7 +74,8 @@ public class EasyMybatis {
     /**
      * 添加单个mapper
      *
-     * @param type
+     * @param type 类型
+     * @param <T>  泛型
      */
     public <T> void addMapper(Class<T> type) {
         if (sqlSessionFactory != null) {
@@ -85,7 +86,7 @@ public class EasyMybatis {
     /**
      * 获取SessionFactory
      *
-     * @return
+     * @return SqlSessionFactory
      */
     public SqlSessionFactory getSqlSessionFactory() {
         return sqlSessionFactory;
@@ -95,7 +96,7 @@ public class EasyMybatis {
      * 获取sqlsession
      *
      * @param isAutoComit 是否自动提交
-     * @return
+     * @return SqlSession
      */
     public SqlSession getSqlSession(boolean isAutoComit) {
         return sqlSessionFactory.openSession(isAutoComit);
@@ -104,7 +105,7 @@ public class EasyMybatis {
     /**
      * 获取sqlsession(自动提交)
      *
-     * @return
+     * @return SqlSession
      */
     public SqlSession getSqlSession() {
         return getSqlSession(true);

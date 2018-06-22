@@ -1,24 +1,23 @@
 package cn.khthink.easyapi.tools;
 
-/**
- * Created by kh on 2017/7/4.
- */
 
 /**
  * 字符处理工具
+ *
+ * @author kh
  */
 public class TextUtils {
 
     /**
      * 判断是否为空
      *
-     * @return
+     * @param charSequence 传入的字符串
+     * @return boolean
      */
     public static boolean isEmpty(CharSequence charSequence) {
-        if (charSequence == null)
+        if (charSequence == null) {
             return true;
-        if ("".equals(charSequence))
-            return true;
-        return false;
+        }
+        return "".contentEquals(charSequence);
     }
 }

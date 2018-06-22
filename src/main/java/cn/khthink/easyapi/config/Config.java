@@ -38,7 +38,7 @@ public abstract class Config {
      *
      * @param key   键
      * @param value 默认缺省值
-     * @return
+     * @return String
      */
     protected static String getStringValue(String key, String value) {
         if (EasyApi == null || !EasyApi.containsKey(key)) {
@@ -57,7 +57,7 @@ public abstract class Config {
      *
      * @param key   键
      * @param value 默认缺省值
-     * @return
+     * @return boolean
      */
     protected static boolean getBooleanValue(String key, boolean value) {
         if (EasyApi == null || !EasyApi.containsKey(key)) {
@@ -76,7 +76,7 @@ public abstract class Config {
      *
      * @param key   键
      * @param value 默认缺省值
-     * @return
+     * @return int
      */
     protected static int getIntValue(String key, int value) {
         if (EasyApi == null || !EasyApi.containsKey(key)) {
@@ -96,7 +96,7 @@ public abstract class Config {
      *
      * @param key   键
      * @param value 默认缺省值
-     * @return
+     * @return long
      */
     protected static long getLongValue(String key, long value) {
         if (EasyApi == null || !EasyApi.containsKey(key)) {

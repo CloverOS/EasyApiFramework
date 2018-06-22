@@ -33,7 +33,7 @@ public class EasyRequestKit {
     /**
      * 添加请求
      *
-     * @param request
+     * @param request 请求
      */
     public static void addRequest(Request request) {
         String req = request.getRemoteip() + request.getMethod() + request.getUriInfo() + request.getDatas();
@@ -43,8 +43,8 @@ public class EasyRequestKit {
     /**
      * 是否被限制
      *
-     * @param request
-     * @return
+     * @param request 请求
+     * @return boolean
      */
     public static boolean isLimit(Request request) {
         String req = request.getRemoteip() + request.getMethod() + request.getUriInfo() + request.getDatas();

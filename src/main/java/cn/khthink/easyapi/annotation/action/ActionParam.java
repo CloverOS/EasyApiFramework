@@ -21,42 +21,42 @@ public @interface ActionParam {
     /**
      * 参数名
      *
-     * @return
+     * @return String
      */
     String param() default "";
 
     /**
      * 参数类型
      *
-     * @return
+     * @return ParamType
      */
     ParamType type() default ParamType.STRING;
 
     /**
      * 参数描述
      *
-     * @return
+     * @return String
      */
     String paramDesc() default "";
 
     /**
      * 参数例子
      *
-     * @return
+     * @return String
      */
     String paramExmple() default "";
 
     /**
      * 参数默认值
      *
-     * @return
+     * @return String
      */
     String defaultValue() default "";
 
     /**
      * 参数是否必须
      *
-     * @return
+     * @return boolean
      */
     boolean isNeed() default true;
 }

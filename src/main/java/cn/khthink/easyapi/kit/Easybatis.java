@@ -11,7 +11,7 @@ public interface Easybatis {
     /**
      * 获取sqlsession
      *
-     * @return
+     * @return SqlSession
      */
     SqlSession getSqlSession();
 
@@ -19,16 +19,16 @@ public interface Easybatis {
      * 获取sqlsession
      *
      * @param isAutoCommit 是否自动提交事务
-     * @return
+     * @return SqlSession
      */
     SqlSession getSqlSession(boolean isAutoCommit);
 
     /**
      * 获取mapper
      *
-     * @param type
-     * @param <T>
-     * @return
+     * @param type 类型
+     * @param <T>  泛型
+     * @return T
      */
     <T> T getMapper(Class<T> type);
 

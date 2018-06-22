@@ -23,9 +23,9 @@ public interface EasyResponse {
     /**
      * 发送成功空数据
      *
-     * @param request
-     * @param msg
-     * @throws IOException
+     * @param request 请求
+     * @param msg     消息
+     * @throws IOException IO异常
      */
     default void sendSuccessedEmptyDataMsg(Request request, String msg) throws IOException {
         sendEmptyDataMsg(request, msg, ResultCode.SUCCESSED);
@@ -34,9 +34,9 @@ public interface EasyResponse {
     /**
      * 发送失败空数据
      *
-     * @param request
-     * @param msg
-     * @throws IOException
+     * @param request 请求
+     * @param msg     消息
+     * @throws IOException IO异常
      */
     default void sendFailedEmptyDataMsg(Request request, String msg) throws IOException {
         sendEmptyDataMsg(request, msg, ResultCode.FAILED);
@@ -45,10 +45,10 @@ public interface EasyResponse {
     /**
      * 发送空数据
      *
-     * @param request
-     * @param msg
-     * @param code
-     * @throws IOException
+     * @param request 请求
+     * @param msg     消息
+     * @param code    返回码
+     * @throws IOException IO异常
      */
     default void sendEmptyDataMsg(Request request, String msg, int code) throws IOException {
         sendMsg(request, null, msg, code);
@@ -57,10 +57,10 @@ public interface EasyResponse {
     /**
      * 发送成功信息数据
      *
-     * @param request
-     * @param datas
-     * @param msg
-     * @throws IOException
+     * @param request 请求
+     * @param datas   数据
+     * @param msg     消息
+     * @throws IOException IO异常
      */
     default void sendSuccessMsg(Request request, Object datas, String msg) throws IOException {
         sendMsg(request, datas, msg, ResultCode.SUCCESSED);
@@ -69,10 +69,10 @@ public interface EasyResponse {
     /**
      * 发送失败信息数据
      *
-     * @param request
-     * @param datas
-     * @param msg
-     * @throws IOException
+     * @param request 请求
+     * @param datas   数据
+     * @param msg     消息
+     * @throws IOException IO异常
      */
     default void sendFailedMsg(Request request, Object datas, String msg) throws IOException {
         sendMsg(request, datas, msg, ResultCode.FAILED);
@@ -81,9 +81,9 @@ public interface EasyResponse {
     /**
      * 发送成功数据
      *
-     * @param request
-     * @param datas
-     * @throws IOException
+     * @param request 请求
+     * @param datas   数据
+     * @throws IOException IO异常
      */
     default void sendSuccess(Request request, Object datas) throws IOException {
         sendMsg(request, datas, null, ResultCode.SUCCESSED);
@@ -92,9 +92,9 @@ public interface EasyResponse {
     /**
      * 发送失败数据
      *
-     * @param request
-     * @param datas
-     * @throws IOException
+     * @param request 请求
+     * @param datas   数据
+     * @throws IOException IO异常
      */
     default void sendFailed(Request request, Object datas) throws IOException {
         sendMsg(request, datas, null, ResultCode.FAILED);
@@ -103,11 +103,11 @@ public interface EasyResponse {
     /**
      * 发送数据信息
      *
-     * @param request
-     * @param datas
-     * @param msg
-     * @param code
-     * @throws IOException
+     * @param request 请求
+     * @param datas   数据
+     * @param msg     消息
+     * @param code    返回码
+     * @throws IOException IO异常
      */
     default void sendMsg(Request request, Object datas, String msg, int code) throws IOException {
         HttpServletResponse httpServletResponse = request.getHttpServletInfo().getHttpServletResponse();
@@ -121,10 +121,10 @@ public interface EasyResponse {
     /**
      * 创建返回数据json包
      *
-     * @param msg
-     * @param datas
-     * @param code
-     * @return
+     * @param msg   消息
+     * @param datas 数据
+     * @param code  返回码
+     * @return JSONObject
      */
     default JSONObject createResponseJson(String msg, Object datas, int code) {
         JSONObject jsonObject = new JSONObject();

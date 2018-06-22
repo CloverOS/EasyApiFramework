@@ -21,8 +21,8 @@ public interface FileKit {
     /**
      * 上传文件
      *
-     * @param request
-     * @return
+     * @param request servlet请求
+     * @return JSONObject
      */
     default JSONObject uploadFile(HttpServletRequest request) {
         JSONObject jsonObject = new JSONObject();

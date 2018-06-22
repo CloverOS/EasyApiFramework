@@ -87,8 +87,8 @@ public class EasyActionPool {
     /**
      * 添加处理器
      *
-     * @param info
-     * @param baseEasyAction
+     * @param info           路由
+     * @param baseEasyAction 处理器
      */
     private void addAction(String info, BaseEasyAction baseEasyAction) {
         actionMap.put(info, baseEasyAction);
@@ -109,8 +109,8 @@ public class EasyActionPool {
     /**
      * 删除处理器
      *
-     * @param tag
-     * @param name
+     * @param tag  标记
+     * @param name 处理器名称
      */
     private void deleteAction(String tag, String name) {
         actionMap.remove(tag + name);
@@ -121,7 +121,7 @@ public class EasyActionPool {
      * 检查是否为处理器子类
      *
      * @param clazz 类路径
-     * @return
+     * @return boolean
      */
     private boolean checkAction(String clazz) {
         try {
@@ -134,7 +134,7 @@ public class EasyActionPool {
     /**
      * 获取处理器信息
      *
-     * @return
+     * @return UriInfo
      */
     private UriInfo getActionInfo(BaseEasyAction action) {
         if (action.getClass().getAnnotation(Action.class) == null) {
@@ -147,8 +147,8 @@ public class EasyActionPool {
     /**
      * 获取处理器
      *
-     * @param uri
-     * @return
+     * @param uri 路由bean
+     * @return BaseEasyAction
      */
     public BaseEasyAction getAction(UriInfo uri) {
         return getAction(uri.getInfo());
@@ -157,7 +157,8 @@ public class EasyActionPool {
     /**
      * 获取处理器信息
      *
-     * @return
+     * @param uriInfo 路由信息
+     * @return cn.khthink.easyapi.api.bean.Action
      */
     public cn.khthink.easyapi.api.bean.Action getActionInfo(UriInfo uriInfo) {
         return getActionInfo(uriInfo.getInfo());
@@ -166,8 +167,8 @@ public class EasyActionPool {
     /**
      * 获取处理器
      *
-     * @param uri
-     * @return
+     * @param uri 路由地址
+     * @return BaseEasyAction
      */
     public BaseEasyAction getAction(String uri) {
         return actionMap.getOrDefault(uri, actionMap.get(Constant.NULLACTION));
@@ -176,7 +177,8 @@ public class EasyActionPool {
     /**
      * 获取处理器信息
      *
-     * @return
+     * @param uriInfo 路由信息
+     * @return cn.khthink.easyapi.api.bean.Action
      */
     public cn.khthink.easyapi.api.bean.Action getActionInfo(String uriInfo) {
         return actionInfoMap.getOrDefault(uriInfo, null);
@@ -185,7 +187,7 @@ public class EasyActionPool {
     /**
      * 获取处理器列表
      *
-     * @return
+     * @return List
      */
     @Deprecated
     public List<BaseEasyAction> getAllAction() {
@@ -201,7 +203,7 @@ public class EasyActionPool {
     /**
      * 获取所有处理器
      *
-     * @return
+     * @return Map
      */
     @Deprecated
     public Map<String, BaseEasyAction> getActionMap() {
@@ -211,8 +213,8 @@ public class EasyActionPool {
     /**
      * 通过分组名获取接口列表
      *
-     * @param groupName
-     * @return
+     * @param groupName 组名
+     * @return List
      */
     public List<cn.khthink.easyapi.api.bean.Action> getActionsByGroup(String groupName) {
         return actionGroupMap.get(groupName).getActionList();
@@ -221,7 +223,7 @@ public class EasyActionPool {
     /**
      * 获取接口分组列表
      *
-     * @return
+     * @return Map
      */
     public Map<String, ActionGroup> getActionGroupList() {
         return actionGroupMap;
@@ -230,7 +232,7 @@ public class EasyActionPool {
     /**
      * 获取api action列表
      *
-     * @return
+     * @return List
      */
     public List<cn.khthink.easyapi.api.bean.Action> getAllActions() {
         List<cn.khthink.easyapi.api.bean.Action> list = new ArrayList<>();

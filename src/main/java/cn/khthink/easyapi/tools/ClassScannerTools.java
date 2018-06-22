@@ -39,6 +39,7 @@ public class ClassScannerTools {
      * 获取Class列表
      *
      * @param packageName 包名(不指定为全部)
+     * @param list        返回的list
      */
     public void getClazzs(String packageName, List<String> list) {
         List<String> temp;
@@ -75,8 +76,8 @@ public class ClassScannerTools {
     /**
      * 获取根目录
      *
-     * @param url
-     * @return
+     * @param url 目录地址
+     * @return String
      */
     private String getRootPath(URL url) {
         String fileUrl = url.getFile();
@@ -90,8 +91,8 @@ public class ClassScannerTools {
     /**
      * 去除文件后缀
      *
-     * @param name
-     * @return
+     * @param name 文件名
+     * @return String
      */
     private String trimExtension(String name) {
         int pos = name.indexOf('.');
@@ -105,7 +106,7 @@ public class ClassScannerTools {
      * 判断是否是一个类文件
      *
      * @param name 文件名
-     * @return
+     * @return boolean
      */
     private boolean isClassFile(String name) {
         return name.endsWith(".class");
@@ -115,7 +116,7 @@ public class ClassScannerTools {
      * 判断是否是一个jar包文件
      *
      * @param name 文件名
-     * @return
+     * @return boolean
      */
     private boolean isJarFile(String name) {
         return name.endsWith(".jar");
@@ -124,11 +125,11 @@ public class ClassScannerTools {
     /**
      * 从一个jar包读取class
      *
-     * @param listName
-     * @param jarPath
-     * @param splashedPackageName
-     * @return
-     * @throws IOException
+     * @param listName            列表
+     * @param jarPath             jar包路径
+     * @param splashedPackageName 包名
+     * @return List<String>
+     * @throws IOException IO异常
      */
     private List<String> readJar(List<String> listName, String jarPath, String splashedPackageName) throws IOException {
         JarInputStream jarIn = new JarInputStream(new FileInputStream(jarPath));
@@ -145,8 +146,8 @@ public class ClassScannerTools {
     /**
      * 从目录读取class
      *
-     * @param path
-     * @return
+     * @param path 路径
+     * @return List<String>
      */
     private List<String> readDirectory(String path) {
         File file = new File(path.replace("%20", " "));

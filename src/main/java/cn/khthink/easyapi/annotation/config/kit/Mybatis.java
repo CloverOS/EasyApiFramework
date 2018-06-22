@@ -11,21 +11,21 @@ public @interface Mybatis {
     /**
      * 开启mybatis
      *
-     * @return
+     * @return boolean
      */
     boolean enable() default true;
 
     /**
      * 配置文件
      *
-     * @return
+     * @return String
      */
     String config() default "";
 
     /**
      * mappers包名
      *
-     * @return
+     * @return String数组
      */
     String[] mappers() default {};
 }

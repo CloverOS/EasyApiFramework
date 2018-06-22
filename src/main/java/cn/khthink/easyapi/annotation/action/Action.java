@@ -18,70 +18,70 @@ public @interface Action {
     /**
      * 处理器名称
      *
-     * @return
+     * @return String
      */
     String actionName();
 
     /**
      * 处理器标识
      *
-     * @return
+     * @return String
      */
     String actionTag();
 
     /**
      * 组
      *
-     * @return
+     * @return ActionGroup
      */
     ActionGroup group();
 
     /**
      * 处理器作者
      *
-     * @return
+     * @return String
      */
     String Auther() default "kh";
 
     /**
      * 处理器描述
      *
-     * @return
+     * @return String
      */
     String actionDesc() default "";
 
     /**
      * 处理器参数描述
      *
-     * @return
+     * @return  ActionParam[]
      */
     ActionParam[] params() default {};
 
     /**
      * 处理器返回参数描述
      *
-     * @return
+     * @return ActionParam[]
      */
     ActionParam[] returnParams() default {};
 
     /**
      * 是否开启接口缓存
      *
-     * @return
+     * @return boolean
      */
     boolean isCache() default false;
 
     /**
      * 是否开启session验证
      *
-     * @return
+     * @return boolean
      */
     boolean isSessionOpen() default false;
 
     /**
      * 是否开启token验证
      *
-     * @return
+     * @return boolean
      */
     boolean isToken() default false;
 }

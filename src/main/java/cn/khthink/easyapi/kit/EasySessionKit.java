@@ -64,7 +64,7 @@ public class EasySessionKit {
     /**
      * 获取文件轮询任务
      *
-     * @return
+     * @return Observer
      */
     private Observer<Long> getFileTask() {
         return new Observer<Long>() {
@@ -108,8 +108,8 @@ public class EasySessionKit {
     /**
      * 是否为session文件
      *
-     * @param name
-     * @return
+     * @param name 文件名字
+     * @return 是否为文件
      */
     private boolean isSessionFile(String name) {
         String[] split = name.split(SESSION);
@@ -122,8 +122,8 @@ public class EasySessionKit {
     /**
      * session是否过期
      *
-     * @param name
-     * @return
+     * @param name session密钥
+     * @return 是否为密钥
      */
     private boolean isExpired(String name) {
         String[] split = name.split(SESSION);
@@ -145,7 +145,7 @@ public class EasySessionKit {
      *
      * @param data        存入的数据
      * @param millseconds 过期时间(单位:毫秒)
-     * @return
+     * @return session密钥
      */
     public synchronized String createSession(String data, long millseconds) {
         String session = UUID.randomUUID().toString();
@@ -173,7 +173,7 @@ public class EasySessionKit {
      *
      * @param session sessionID编号
      * @param data    数据
-     * @return
+     * @return boolean
      */
     public boolean setSession(String session, String data) {
         File sessionFile = getSessionFile(session);
@@ -204,7 +204,7 @@ public class EasySessionKit {
      * 获取session数据
      *
      * @param session sessionID编号
-     * @return
+     * @return String session数据
      */
     public String getSession(String session) {
         File sessionFile = getSessionFile(session);
@@ -226,8 +226,8 @@ public class EasySessionKit {
     /**
      * 销毁session
      *
-     * @param session
-     * @return
+     * @param session session密钥
+     * @return 是否成功删除
      */
     public boolean delSession(String session) {
         File sessionFile = getSessionFile(session);
@@ -245,8 +245,8 @@ public class EasySessionKit {
     /**
      * 获取session文件
      *
-     * @param session
-     * @return
+     * @param session session密钥
+     * @return 文件
      */
     private File getSessionFile(String session) {
         File[] files = sessionDir.listFiles();

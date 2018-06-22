@@ -15,7 +15,7 @@ public abstract class BaseEasyConfig extends Config {
     /**
      * 自定义初始化
      *
-     * @throws Exception
+     * @throws Exception 初始化错误
      */
     protected abstract void init() throws Exception;
 }

@@ -15,14 +15,14 @@ public @interface ActionGroup {
     /**
      * 权限Id
      *
-     * @return
+     * @return int
      */
     int power() default 1000;
 
     /**
      * 组名
      *
-     * @return
+     * @return String
      */
     String groupName() default "";
 }

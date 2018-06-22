@@ -49,8 +49,8 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
     /**
      * 验证参数
      *
-     * @param request
-     * @throws IOException
+     * @param request 请求
+     * @throws IOException IO异常
      */
     void verifyParameter(Request request) throws Exception {
         if (CoreConfig.enableVerifyParamter) {
@@ -66,7 +66,7 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
     /**
      * 验证参数
      *
-     * @return
+     * @return boolean
      */
     private boolean isPass(Request request) throws IOException {
         JSONObject data = request.getDatas();
@@ -114,9 +114,9 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
     /**
      * 获取接收数据转换为javabean
      *
-     * @param type
-     * @param <T>
-     * @return
+     * @param type 类型
+     * @param <T>  泛型
+     * @return T
      */
     protected <T> T getReciveData(Class<T> type) {
         return getData(datas, type);
@@ -125,9 +125,9 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
     /**
      * 获取session数据Bean
      *
-     * @param type
-     * @param <T>
-     * @return
+     * @param type 类型
+     * @param <T>  泛型
+     * @return T
      */
     protected <T> T getSessionData(Class<T> type) {
         return getData(sessionDatas, type);
@@ -136,10 +136,9 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
     /**
      * 数据转换
      *
-     * @param datas
-     * @param type
-     * @param <T>
-     * @return
+     * @param datas 数据
+     * @param type  类型
+     * @return T
      */
     private <T> T getData(JSONObject datas, Class<T> type) {
         return JSON.toJavaObject(datas, type);

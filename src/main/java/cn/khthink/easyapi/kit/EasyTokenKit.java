@@ -31,8 +31,8 @@ public class EasyTokenKit {
     /**
      * 消费token
      *
-     * @param token
-     * @return
+     * @param token token密钥
+     * @return 是否成功消费
      */
     public synchronized boolean userToken(String token) {
         synchronized (tokenLists) {
@@ -47,7 +47,7 @@ public class EasyTokenKit {
     /**
      * 创建一个Token
      *
-     * @return
+     * @return token密钥
      */
     public synchronized String createToken() {
         String token;

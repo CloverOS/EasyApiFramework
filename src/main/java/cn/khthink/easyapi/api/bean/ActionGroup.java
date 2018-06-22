@@ -21,7 +21,7 @@ public class ActionGroup implements Serializable {
     /**
      * 添加action到组
      *
-     * @param action
+     * @param action 处理器
      */
     public void addAction(Action action) {
         actionList.add(action);

@@ -56,8 +56,8 @@ public class Request {
     /**
      * 是否同一个用户
      *
-     * @param request
-     * @return
+     * @param request 请求
+     * @return boolean
      */
     public boolean isSameUser(Request request) {
         return getRemote().equals(request.getRemote());

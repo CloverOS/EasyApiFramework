@@ -20,7 +20,8 @@ public class UriCheckTools {
     /**
      * 获取客户端IP地址
      *
-     * @return
+     * @param request servlet请求
+     * @return String
      */
     public static String getRemortIP(HttpServletRequest request) {
         if (request.getHeader(XFORWARDED) == null) {
@@ -33,8 +34,8 @@ public class UriCheckTools {
     /**
      * 路由信息转换
      *
-     * @param uri
-     * @return
+     * @param uri 路由地址
+     * @return UriInfo
      */
     public static UriInfo getActionName(String uri) {
         return new UriInfo(uri.split("/")[1], uri.split("/")[2]);

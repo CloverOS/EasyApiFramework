@@ -11,28 +11,28 @@ public @interface FileUpload {
     /**
      * 上传路径
      *
-     * @return
+     * @return String
      */
     String uploadPath() default "upload";
 
     /**
      * 内存阀值
      *
-     * @return
+     * @return int
      */
     int memoryThreshold() default 1024 * 1024 * 3;
 
     /**
      * 文件最大限制
      *
-     * @return
+     * @return int
      */
     int maxFileSize() default 1024 * 1024 * 40;
 
     /**
      * 最大请求大小
      *
-     * @return
+     * @return int
      */
     int maxRequestSize() default 1024 * 1024 * 50;
 }

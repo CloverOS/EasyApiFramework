@@ -40,7 +40,7 @@ public class EasyRedis {
     /**
      * 释放redis
      *
-     * @param jedis
+     * @param jedis jedis实例
      */
     public void releaseJedis(Jedis jedis) {
         if (jedis != null) {
@@ -51,7 +51,7 @@ public class EasyRedis {
     /**
      * 获取redis服务
      *
-     * @return
+     * @return redis实例
      */
     public Jedis getJedis() {
         return jedisPool.getResource();
@@ -61,7 +61,7 @@ public class EasyRedis {
      * 获取redis服务
      *
      * @param isAutoRelease 是否自动释放
-     * @return
+     * @return redis实例
      */
     public Jedis getJedis(boolean isAutoRelease) {
         this.isAutoRelease = isAutoRelease;
@@ -71,9 +71,9 @@ public class EasyRedis {
     /**
      * 设置键值
      *
-     * @param jedis
-     * @param key
-     * @param value
+     * @param jedis jedis实例
+     * @param key   键
+     * @param value 值
      */
     public void set(Jedis jedis, String key, String value) {
         jedis.set(key, value);
@@ -85,9 +85,9 @@ public class EasyRedis {
     /**
      * 插入列表
      *
-     * @param jedis
-     * @param key
-     * @param param
+     * @param jedis 实例
+     * @param key   键
+     * @param param 值
      */
     public void lpush(Jedis jedis, String key, String... param) {
         jedis.lpush(key, param);

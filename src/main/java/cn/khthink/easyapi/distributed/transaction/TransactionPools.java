@@ -32,7 +32,7 @@ public class TransactionPools {
     /**
      * 从事务池里获取一个事务
      *
-     * @return
+     * @return Transaction
      */
     public synchronized Transaction getTransaction() {
         if (transactionHashMap.size() > 0) {

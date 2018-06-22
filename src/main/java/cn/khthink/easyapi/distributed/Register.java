@@ -13,8 +13,8 @@ public interface Register {
     /**
      * 注册服务
      *
-     * @param action
-     * @return
+     * @param action 处理器
+     * @return Register
      */
     Register registerService(Action[] action);
 
