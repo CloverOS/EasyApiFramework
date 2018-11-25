@@ -5,7 +5,8 @@ package cn.khthink.easyapi.action;
 	CopyRight © 2016-2018 鲨软科技, All Rights Reserved. 
  */
 
-import cn.khthink.easyapi.api.bean.ActionParam;
+import cn.khthink.easyapi.api.bean.ActionBean;
+import cn.khthink.easyapi.api.bean.ActionParamBean;
 import cn.khthink.easyapi.bean.Request;
 import cn.khthink.easyapi.config.Constant;
 import cn.khthink.easyapi.config.CoreConfig;
@@ -70,7 +71,7 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
      */
     private boolean isPass(Request request) throws IOException {
         JSONObject data = request.getDatas();
-        cn.khthink.easyapi.api.bean.Action action = EasyActionPool.getInstance().getActionInfo(request.getUriInfo());
+        ActionBean action = EasyActionPool.getInstance().getActionInfo(request.getUriInfo());
         if (action != null) {
             if (action.isSessionOpen()) {
                 if (!data.containsKey(Constant.SESSION)) {
@@ -87,9 +88,9 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
                     }
                 }
             }
-            ActionParam[] actionParams = action.getActionParam();
+            ActionParamBean[] actionParams = action.getActionParam();
             if (actionParams != null && actionParams.length > 0) {
-                for (ActionParam ap : actionParams) {
+                for (ActionParamBean ap : actionParams) {
                     if (!"".equals(ap.getDefaultValue()) && data.get(ap.getParam()) == null) {
                         datas.put(ap.getParam(), ap.getDefaultValue());
                     } else {

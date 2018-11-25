@@ -16,14 +16,14 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class Action {
+public class ActionBean {
     private String actionname;
     private UriInfo info;
     private String desc;
     private String auther;
     private Group group;
-    private ActionParam[] actionParam;
-    private ActionParam[] returnParam;
+    private ActionParamBean[] actionParam;
+    private ActionParamBean[] returnParam;
     private boolean isCache;
     private boolean isSessionOpen;
     private boolean isToken;

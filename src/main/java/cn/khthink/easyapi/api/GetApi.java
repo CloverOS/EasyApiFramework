@@ -1,7 +1,7 @@
 package cn.khthink.easyapi.api;
 
 import cn.khthink.easyapi.action.EasyActionPool;
-import cn.khthink.easyapi.api.bean.Action;
+import cn.khthink.easyapi.api.bean.ActionBean;
 import cn.khthink.easyapi.config.CoreConfig;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -39,13 +39,13 @@ public class GetApi extends HttpServlet {
             JSONArray jsonArray = new JSONArray();
             JSONObject result = new JSONObject();
             if (group != null && !"".equals(group)) {
-                List<Action> actionsByGroup = EasyActionPool.getInstance().getActionsByGroup(group);
-                for (Action ac : actionsByGroup) {
+                List<ActionBean> actionsByGroup = EasyActionPool.getInstance().getActionsByGroup(group);
+                for (ActionBean ac : actionsByGroup) {
                     jsonArray.add(JSONObject.toJSON(ac));
                 }
             } else {
-                List<Action> list = EasyActionPool.getInstance().getAllActions();
-                for (Action ac : list) {
+                List<ActionBean> list = EasyActionPool.getInstance().getAllActions();
+                for (ActionBean ac : list) {
                     jsonArray.add(JSONObject.toJSON(ac));
                 }
             }
@@ -56,7 +56,7 @@ public class GetApi extends HttpServlet {
             resp.getWriter().print(result.toJSONString());
         } else if (r.equals(actionreturn)) {
             JSONArray jsonArray = new JSONArray();
-            Action ac = EasyActionPool.getInstance().getActionInfo(action);
+            ActionBean ac = EasyActionPool.getInstance().getActionInfo(action);
             jsonArray.addAll(Arrays.asList(ac.getReturnParam()));
             JSONObject result = new JSONObject();
             result.put("code", 0);
@@ -65,7 +65,7 @@ public class GetApi extends HttpServlet {
             resp.getWriter().print(result.toJSONString());
         } else {
             JSONArray jsonArray = new JSONArray();
-            Action ac = EasyActionPool.getInstance().getActionInfo(action);
+            ActionBean ac = EasyActionPool.getInstance().getActionInfo(action);
             jsonArray.addAll(Arrays.asList(ac.getActionParam()));
             JSONObject result = new JSONObject();
             result.put("code", 0);

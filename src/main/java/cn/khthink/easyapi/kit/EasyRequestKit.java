@@ -27,7 +27,7 @@ public class EasyRequestKit {
      */
     public void init() {
         map = new ConcurrentHashMap<>(10000);
-        EasyLogger.info("--->接口限制:" + CoreConfig.limit + "ms");
+        EasyLogger.info("--->接口限制访问间隔:" + CoreConfig.limit + "ms");
     }
 
     /**

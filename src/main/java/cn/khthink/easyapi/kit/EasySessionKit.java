@@ -1,10 +1,13 @@
 package cn.khthink.easyapi.kit;
 
+import cn.khthink.easyapi.config.Constant;
 import cn.khthink.easyapi.config.CoreConfig;
+import cn.khthink.easyapi.redis.EasyRedis;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import redis.clients.jedis.Jedis;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -49,16 +53,36 @@ public class EasySessionKit {
      * 初始化Session组件
      */
     public void initSessionKit() {
+        EasyLogger.info("--->初始化Session组件");
+        if (CoreConfig.enableRedis) {
+            initSessionRedisKit();
+        } else {
+            initSessionFileKit();
+        }
+    }
+
+    /**
+     * 使用默认文件构建
+     */
+    private void initSessionFileKit() {
         sessionPath = CoreConfig.webPath + "Session";
         sessionDir = new File(sessionPath);
         if (!sessionDir.exists()) {
-            sessionDir.mkdir();
+            if (!sessionDir.mkdir()) {
+                EasyLogger.info("--->初始化Session组件失败:无法创建文件夹");
+            }
         }
-        EasyLogger.info("--->初始化Session组件");
         Observable
                 .interval(0, 30, TimeUnit.MINUTES)
                 .observeOn(Schedulers.io())
                 .subscribe(getFileTask());
+    }
+
+    /**
+     * 使用Redis构建
+     */
+    private void initSessionRedisKit() {
+        EasyRedis.getInstance().init(Constant.SESSION_REDIS);
     }
 
     /**
@@ -99,7 +123,9 @@ public class EasySessionKit {
         for (File sessionFile : sessionFiles) {
             if (isSessionFile(sessionFile.getName())) {
                 if (isExpired(sessionFile.getName())) {
-                    sessionFile.delete();
+                    if (sessionFile.delete()) {
+                        EasyLogger.info("--->删除过期Session:" + sessionFile.getName());
+                    }
                 }
             }
         }
@@ -113,10 +139,7 @@ public class EasySessionKit {
      */
     private boolean isSessionFile(String name) {
         String[] split = name.split(SESSION);
-        if (split.length == TAG) {
-            return true;
-        }
-        return false;
+        return split.length == TAG;
     }
 
     /**
@@ -147,7 +170,7 @@ public class EasySessionKit {
      * @param millseconds 过期时间(单位:毫秒)
      * @return session密钥
      */
-    public synchronized String createSession(String data, long millseconds) {
+    private synchronized String createSessionByFile(String data, long millseconds) {
         String session = UUID.randomUUID().toString();
         String fileName;
         Calendar calendar = Calendar.getInstance();
@@ -169,13 +192,49 @@ public class EasySessionKit {
     }
 
     /**
+     * 创建session
+     *
+     * @param data        存入的数据
+     * @param millseconds 过期时间(单位:毫秒)
+     * @return session密钥
+     */
+    public synchronized String createSession(String data, long millseconds) {
+        if (CoreConfig.enableRedis) {
+            String session = UUID.randomUUID().toString();
+            Jedis jedis = EasyRedis.getInstance().getJedis(Constant.SESSION_REDIS, true);
+            EasyRedis.getInstance().set(jedis, Constant.EASY_SESSION + session, data, EasyRedis.NX, EasyRedis.PX, millseconds);
+            return session;
+        } else {
+            return createSessionByFile(data, millseconds);
+        }
+    }
+
+    /**
+     * 清空并重新设置数据
+     *
+     * @param session     sessionID编号
+     * @param data        数据
+     * @param millseconds 过期时间(单位:毫秒)
+     * @return boolean
+     */
+    public boolean setSession(String session, String data, long millseconds) {
+        if (CoreConfig.enableRedis) {
+            Jedis jedis = EasyRedis.getInstance().getJedis(Constant.SESSION_REDIS, true);
+            EasyRedis.getInstance().set(jedis, session, data, EasyRedis.NX, EasyRedis.PX, millseconds);
+            return true;
+        } else {
+            return setSessionByFile(session, data);
+        }
+    }
+
+    /**
      * 清空并重新设置数据
      *
      * @param session sessionID编号
      * @param data    数据
      * @return boolean
      */
-    public boolean setSession(String session, String data) {
+    private boolean setSessionByFile(String session, String data) {
         File sessionFile = getSessionFile(session);
         try {
             if (sessionFile == null) {
@@ -207,6 +266,21 @@ public class EasySessionKit {
      * @return String session数据
      */
     public String getSession(String session) {
+        if (CoreConfig.enableRedis) {
+            Jedis jedis = EasyRedis.getInstance().getJedis(Constant.SESSION_REDIS, true);
+            return EasyRedis.getInstance().getValue(jedis, Constant.EASY_SESSION + session);
+        } else {
+            return getSessionByFile(session);
+        }
+    }
+
+    /**
+     * 获取session数据
+     *
+     * @param session sessionID编号
+     * @return String session数据
+     */
+    private String getSessionByFile(String session) {
         File sessionFile = getSessionFile(session);
         if (sessionFile != null) {
             try {
@@ -250,6 +324,7 @@ public class EasySessionKit {
      */
     private File getSessionFile(String session) {
         File[] files = sessionDir.listFiles();
+        assert files != null;
         for (File file : files) {
             if (file.getName().startsWith(session)) {
                 return file;
@@ -272,12 +347,27 @@ public class EasySessionKit {
      * @param isClear 是否清空session
      */
     public void destory(boolean isClear) {
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-        }
-        if (isClear) {
-            if (sessionDir != null) {
-                sessionDir.delete();
+        if (CoreConfig.enableRedis) {
+            if (isClear) {
+                Jedis jedis = EasyRedis.getInstance().getJedis(Constant.SESSION_REDIS, true);
+                Set<String> keys = jedis.keys(Constant.EASY_SESSION + "*");
+                for (String key : keys) {
+                    jedis.del(key);
+                }
+                jedis.close();
+            }
+        } else {
+            if (disposable != null && !disposable.isDisposed()) {
+                disposable.dispose();
+            }
+            if (isClear) {
+                if (sessionDir != null) {
+                    if (sessionDir.delete()) {
+                        EasyLogger.info("--->清空EasySession文件夹");
+                    } else {
+                        EasyLogger.info("--->清空EasySession文件夹失败");
+                    }
+                }
             }
         }
         EasyLogger.info("--->关闭EasySessionKit");

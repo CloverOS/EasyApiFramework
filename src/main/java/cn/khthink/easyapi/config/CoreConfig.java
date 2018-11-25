@@ -8,6 +8,7 @@ package cn.khthink.easyapi.config;
 import cn.khthink.easyapi.action.EasyActionPool;
 import cn.khthink.easyapi.annotation.config.*;
 import cn.khthink.easyapi.annotation.config.kit.*;
+import cn.khthink.easyapi.api.bean.ActionBean;
 import cn.khthink.easyapi.bean.Request;
 import cn.khthink.easyapi.database.mybatis.EasyMybatis;
 import cn.khthink.easyapi.kit.EasyLogger;
@@ -18,7 +19,6 @@ import cn.khthink.easyapi.redis.EasyRedis;
 import cn.khthink.easyapi.tools.ClassScannerTools;
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.sql.Driver;
@@ -54,6 +54,11 @@ public class CoreConfig extends Config {
      * 当前web项目域名
      */
     public static String webHost;
+
+    /**
+     * 是否开启接口访问频率限制
+     */
+    public static boolean enableRequestLimit = false;
 
     /**
      * 默认接口访问频率限制
@@ -126,9 +131,19 @@ public class CoreConfig extends Config {
     public static String redisAds;
 
     /**
+     * Redis密码
+     */
+    public static String redisPasswd;
+
+    /**
+     * Redis端口
+     */
+    public static int redisPort;
+
+    /**
      * 是否开启接口Redis缓存
      */
-    private static boolean enableRedis;
+    public static boolean enableRedis;
 
     /**
      * 上传组件配置
@@ -181,7 +196,9 @@ public class CoreConfig extends Config {
                     EasyLogger.info("初始化自定义配置失败", e);
                 }
             }
-            EasyRequestKit.getInstance().init();
+            if (enableRequestLimit) {
+                EasyRequestKit.getInstance().init();
+            }
             EasyLogger.info("--->WebPath:" + webPath);
             if (enableDatabase) {
                 DataBaseConfig.getInstance().init();
@@ -249,6 +266,7 @@ public class CoreConfig extends Config {
             } else if (annotation instanceof Charset) {
                 charset = ((Charset) annotation).value();
             } else if (annotation instanceof Limit) {
+                enableRequestLimit = ((Limit) annotation).enable();
                 limit = ((Limit) annotation).value();
             } else if (annotation instanceof Log) {
                 isLog = ((Log) annotation).value();
@@ -261,6 +279,8 @@ public class CoreConfig extends Config {
             } else if (annotation instanceof EnableRedis) {
                 enableRedis = ((EnableRedis) annotation).value();
                 redisAds = ((EnableRedis) annotation).host();
+                redisPasswd = ((EnableRedis) annotation).passwd();
+                redisPort = ((EnableRedis) annotation).port();
             } else if (annotation instanceof WebHost) {
                 webHost = ((WebHost) annotation).host();
             } else if (annotation instanceof FileUpload) {
@@ -285,6 +305,7 @@ public class CoreConfig extends Config {
      */
     private void autoConfig(BaseEasyConfig config) {
         if (config.getClass().getAnnotation(EnableAutoConfig.class) != null) {
+            enableRequestLimit = false;
             limit = 1000;
             enableSessionVerify = true;
             charset = Constant.UTF8;
@@ -292,8 +313,10 @@ public class CoreConfig extends Config {
             enableVerifyParamter = true;
             enableDatabase = true;
             enableRedis = false;
-            redisAds = "localhost";
-            webHost = "localhost";
+            redisAds = Constant.LOCALHOST;
+            redisPasswd = null;
+            redisPort = 6379;
+            webHost = Constant.LOCALHOST;
             uploadPath = "upload";
             memoryThreshold = 1024 * 1024 * 3;
             maxFileSize = 1024 * 1024 * 40;
@@ -353,7 +376,8 @@ public class CoreConfig extends Config {
      */
     public static boolean verify(Request request) {
         if (protocol != null) {
-            return protocol.verify(request);
+            ActionBean actionBean = EasyActionPool.getInstance().getActionInfo(request.getUriInfo());
+            return protocol.verify(actionBean, request);
         } else {
             return true;
         }
@@ -370,7 +394,9 @@ public class CoreConfig extends Config {
         if (baseEasyConfig != null) {
             baseEasyConfig.destory();
         }
-        EasyRequestKit.getInstance().destory();
+        if (enableRequestLimit) {
+            EasyRequestKit.getInstance().destory();
+        }
         try {
             //注销驱动防止内存泄漏
             EasyLogger.info("--->注销Driver");

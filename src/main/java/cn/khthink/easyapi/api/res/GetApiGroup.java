@@ -1,7 +1,7 @@
 package cn.khthink.easyapi.api.res;
 
 import cn.khthink.easyapi.action.EasyActionPool;
-import cn.khthink.easyapi.api.bean.ActionGroup;
+import cn.khthink.easyapi.api.bean.ActionGroupBean;
 import cn.khthink.easyapi.config.CoreConfig;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -30,7 +30,7 @@ public class GetApiGroup extends HttpServlet {
         req.setCharacterEncoding(CoreConfig.charset);
         resp.setCharacterEncoding(CoreConfig.charset);
         JSONArray jsonArray = new JSONArray();
-        Map<String, ActionGroup> actionGroupList = EasyActionPool.getInstance().getActionGroupList();
+        Map<String, ActionGroupBean> actionGroupList = EasyActionPool.getInstance().getActionGroupList();
         for (String s : actionGroupList.keySet()) {
             JSONObject jsonObject = new JSONObject();
             JSONArray groupdatas = new JSONArray();

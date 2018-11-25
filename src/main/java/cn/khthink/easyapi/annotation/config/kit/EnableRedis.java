@@ -9,5 +9,25 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnableRedis {
     boolean value() default false;
+
+    /**
+     * 地址
+     *
+     * @return
+     */
     String host() default "localhost";
+
+    /**
+     * 端口
+     *
+     * @return
+     */
+    int port() default 6379;
+
+    /**
+     * 密码
+     *
+     * @return
+     */
+    String passwd() default "";
 }

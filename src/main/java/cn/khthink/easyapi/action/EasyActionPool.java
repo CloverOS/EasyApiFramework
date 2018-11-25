@@ -6,7 +6,8 @@ package cn.khthink.easyapi.action;
  */
 
 import cn.khthink.easyapi.annotation.action.Action;
-import cn.khthink.easyapi.api.bean.ActionGroup;
+import cn.khthink.easyapi.api.bean.ActionBean;
+import cn.khthink.easyapi.api.bean.ActionGroupBean;
 import cn.khthink.easyapi.api.factory.ActionFactory;
 import cn.khthink.easyapi.bean.UriInfo;
 import cn.khthink.easyapi.config.Constant;
@@ -32,12 +33,12 @@ public class EasyActionPool {
     /**
      * 处理信息列表
      */
-    private Map<String, cn.khthink.easyapi.api.bean.Action> actionInfoMap = new HashMap<>();
+    private Map<String, ActionBean> actionInfoMap = new HashMap<>();
 
     /**
      * 处理器信息列表
      */
-    private Map<String, ActionGroup> actionGroupMap = new HashMap<>();
+    private Map<String, ActionGroupBean> actionGroupMap = new HashMap<>();
 
     /**
      * 处理器列表
@@ -93,13 +94,13 @@ public class EasyActionPool {
     private void addAction(String info, BaseEasyAction baseEasyAction) {
         actionMap.put(info, baseEasyAction);
         if (!info.equals(Constant.NULLACTION)) {
-            cn.khthink.easyapi.api.bean.Action action = ActionFactory.getInstance().createAction(baseEasyAction);
+            ActionBean action = ActionFactory.getInstance().createAction(baseEasyAction);
             if (actionGroupMap.containsKey(action.getGroup().getGroupName())) {
                 actionGroupMap.get(action.getGroup().getGroupName()).addAction(action);
             } else {
-                List<cn.khthink.easyapi.api.bean.Action> list = new ArrayList<>();
+                List<ActionBean> list = new ArrayList<>();
                 list.add(action);
-                actionGroupMap.put(action.getGroup().getGroupName(), new ActionGroup(action.getGroup().getGroupName(), action.getGroup().getPower(), list));
+                actionGroupMap.put(action.getGroup().getGroupName(), new ActionGroupBean(action.getGroup().getGroupName(), action.getGroup().getPower(), list));
             }
             actionInfoMap.put(info, action);
             EasyLogger.info("--->载入" + info + "处理器成功");
@@ -158,9 +159,9 @@ public class EasyActionPool {
      * 获取处理器信息
      *
      * @param uriInfo 路由信息
-     * @return cn.khthink.easyapi.api.bean.Action
+     * @return ActionBean
      */
-    public cn.khthink.easyapi.api.bean.Action getActionInfo(UriInfo uriInfo) {
+    public ActionBean getActionInfo(UriInfo uriInfo) {
         return getActionInfo(uriInfo.getInfo());
     }
 
@@ -178,9 +179,9 @@ public class EasyActionPool {
      * 获取处理器信息
      *
      * @param uriInfo 路由信息
-     * @return cn.khthink.easyapi.api.bean.Action
+     * @return ActionBean
      */
-    public cn.khthink.easyapi.api.bean.Action getActionInfo(String uriInfo) {
+    public ActionBean getActionInfo(String uriInfo) {
         return actionInfoMap.getOrDefault(uriInfo, null);
     }
 
@@ -216,7 +217,7 @@ public class EasyActionPool {
      * @param groupName 组名
      * @return List
      */
-    public List<cn.khthink.easyapi.api.bean.Action> getActionsByGroup(String groupName) {
+    public List<ActionBean> getActionsByGroup(String groupName) {
         return actionGroupMap.get(groupName).getActionList();
     }
 
@@ -225,7 +226,7 @@ public class EasyActionPool {
      *
      * @return Map
      */
-    public Map<String, ActionGroup> getActionGroupList() {
+    public Map<String, ActionGroupBean> getActionGroupList() {
         return actionGroupMap;
     }
 
@@ -234,8 +235,8 @@ public class EasyActionPool {
      *
      * @return List
      */
-    public List<cn.khthink.easyapi.api.bean.Action> getAllActions() {
-        List<cn.khthink.easyapi.api.bean.Action> list = new ArrayList<>();
+    public List<ActionBean> getAllActions() {
+        List<ActionBean> list = new ArrayList<>();
         for (String s : actionMap.keySet()) {
             if (!s.equals(Constant.NULLACTION)) {
                 list.add(ActionFactory.getInstance().createAction(actionMap.get(s)));

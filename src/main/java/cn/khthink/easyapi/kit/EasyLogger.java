@@ -1,8 +1,7 @@
 package cn.khthink.easyapi.kit;
 
 import cn.khthink.easyapi.config.CoreConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /*
     Create by KH at 2017/10/18 14:22 
@@ -14,10 +13,32 @@ import org.slf4j.LoggerFactory;
  *
  * @author kh
  */
+@Slf4j
 public class EasyLogger {
-    private static Logger logger;
 
     private static boolean isLog = false;
+
+    /**
+     * 日志等级
+     */
+    public enum Level {
+        /**
+         * 调试
+         */
+        DEBUG,
+        /**
+         * 信息
+         */
+        INFO,
+        /**
+         * 错误
+         */
+        ERROR,
+        /**
+         * 警告
+         */
+        WARNING
+    }
 
 
     /**
@@ -25,43 +46,42 @@ public class EasyLogger {
      */
     public static void init() {
         isLog = CoreConfig.isLog;
-        logger = LoggerFactory.getLogger(EasyLogger.class);
     }
 
     public static void info(Object msg) {
         if (isLog) {
-            logger.info(msg.toString());
+            log.info(msg.toString());
         }
     }
 
     public static void trace(Object o) {
         if (isLog) {
-            logger.trace(o.toString());
+            log.trace(o.toString());
         }
     }
 
     public static void trace(Object o, Throwable throwable) {
         if (isLog) {
-            logger.trace(o.toString(), throwable);
+            log.trace(o.toString(), throwable);
         }
     }
 
     public static void info(Object msg, Throwable throwable) {
         if (isLog) {
-            logger.info(msg.toString(), throwable);
+            log.info(msg.toString(), throwable);
         }
     }
 
     public static void infowithgui(String msg) {
         if (isLog) {
             StringBuilder g = new StringBuilder();
-            int n = 20;
+            int n = 60;
             for (int i = 0; i < n; i++) {
                 g.append("-");
             }
-            logger.info(g.toString());
-            logger.info(msg);
-            logger.info(g.toString());
+            log.info(g.toString());
+            log.info(msg.substring(0, n));
+            log.info(g.toString());
         }
     }
 }

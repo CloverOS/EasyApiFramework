@@ -13,7 +13,7 @@ import lombok.Data;
  * @author kh
  */
 @Data
-public class ActionParam {
+public class ActionParamBean {
     /**
      * 参数名
      */
@@ -44,7 +44,7 @@ public class ActionParam {
      */
     private boolean isNeed;
 
-    public ActionParam(cn.khthink.easyapi.annotation.action.ActionParam actionParam) {
+    public ActionParamBean(cn.khthink.easyapi.annotation.action.ActionParam actionParam) {
         this.param = actionParam.param();
         this.paramDesc = actionParam.paramDesc();
         this.paramExmple = actionParam.paramExmple();

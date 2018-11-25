@@ -8,5 +8,17 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Limit {
+    /**
+     * 是否开启
+     *
+     * @return boolean
+     */
+    boolean enable() default false;
+
+    /**
+     * 间隔 单位毫秒
+     *
+     * @return int
+     */
     int value() default 1000;
 }

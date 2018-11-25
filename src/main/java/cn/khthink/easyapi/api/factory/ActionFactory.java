@@ -7,6 +7,8 @@ package cn.khthink.easyapi.api.factory;
 import cn.khthink.easyapi.action.BaseEasyAction;
 import cn.khthink.easyapi.annotation.action.Action;
 import cn.khthink.easyapi.annotation.action.ActionParam;
+import cn.khthink.easyapi.api.bean.ActionBean;
+import cn.khthink.easyapi.api.bean.ActionParamBean;
 import cn.khthink.easyapi.api.bean.Group;
 import cn.khthink.easyapi.bean.UriInfo;
 
@@ -27,7 +29,7 @@ public class ActionFactory {
         return Factory.instatnce;
     }
 
-    public cn.khthink.easyapi.api.bean.Action createAction(BaseEasyAction action) {
+    public ActionBean createAction(BaseEasyAction action) {
         return getActionInfo(action);
     }
 
@@ -37,7 +39,7 @@ public class ActionFactory {
      *
      * @return
      */
-    private cn.khthink.easyapi.api.bean.Action getActionInfo(BaseEasyAction action) {
+    private ActionBean getActionInfo(BaseEasyAction action) {
         if (action.getClass().getAnnotation(Action.class) == null) {
             return null;
         }
@@ -47,20 +49,20 @@ public class ActionFactory {
         }
         ActionParam[] actionParam = actionInfo.params();
         ActionParam[] returnParam = actionInfo.returnParams();
-        cn.khthink.easyapi.api.bean.ActionParam[] actionParams = new cn.khthink.easyapi.api.bean.ActionParam[]{};
-        cn.khthink.easyapi.api.bean.ActionParam[] returnparams = new cn.khthink.easyapi.api.bean.ActionParam[]{};
+        ActionParamBean[] actionParams = new ActionParamBean[]{};
+        ActionParamBean[] returnparams = new ActionParamBean[]{};
         if (actionParam.length > 0) {
-            actionParams = new cn.khthink.easyapi.api.bean.ActionParam[actionParam.length];
+            actionParams = new ActionParamBean[actionParam.length];
             for (int i = 0; i < actionParam.length; i++) {
-                actionParams[i] = new cn.khthink.easyapi.api.bean.ActionParam(actionParam[i]);
+                actionParams[i] = new ActionParamBean(actionParam[i]);
             }
         }
         if (returnParam.length > 0) {
-            returnparams = new cn.khthink.easyapi.api.bean.ActionParam[returnParam.length];
+            returnparams = new ActionParamBean[returnParam.length];
             for (int i = 0; i < returnParam.length; i++) {
-                returnparams[i] = new cn.khthink.easyapi.api.bean.ActionParam(returnParam[i]);
+                returnparams[i] = new ActionParamBean(returnParam[i]);
             }
         }
-        return new cn.khthink.easyapi.api.bean.Action(actionInfo.actionName(), new UriInfo(actionInfo.actionTag(), actionInfo.actionName()), actionInfo.actionDesc(), actionInfo.Auther(), new Group(actionInfo.group().power(), actionInfo.group().groupName()), actionParams, returnparams, actionInfo.isCache(), actionInfo.isSessionOpen(), actionInfo.isToken());
+        return new ActionBean(actionInfo.actionName(), new UriInfo(actionInfo.actionTag(), actionInfo.actionName()), actionInfo.actionDesc(), actionInfo.Auther(), new Group(actionInfo.group().power(), actionInfo.group().groupName()), actionParams, returnparams, actionInfo.isCache(), actionInfo.isSessionOpen(), actionInfo.isToken());
     }
 }

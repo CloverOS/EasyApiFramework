@@ -13,6 +13,7 @@ package cn.khthink.easyapi.config;
 public class Constant {
     public final static String GET = "GET";
     public final static String POST = "POST";
+    public final static String LOCALHOST = "localhost";
     public final static String LIMITERROR = "接口访问频率限制";
     public final static String PROTOCOLERROR = "验证失败";
     public static final String EASYACTION = "cn.khthink.easyapi.action.BaseEasyAction";
@@ -25,4 +26,9 @@ public class Constant {
     public static final String FILE = "multipart/form-data";
     public static final String SESSION = "session";
     public static final String DEFFIX = "json";
+    /**
+     * session组件默认redis块
+     */
+    public static final int SESSION_REDIS = 5;
+    public static final String EASY_SESSION = "EasySession";
 }

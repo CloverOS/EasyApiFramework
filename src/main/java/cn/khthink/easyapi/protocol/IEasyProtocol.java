@@ -5,6 +5,7 @@ package cn.khthink.easyapi.protocol;
 	CopyRight © 2016-2018 鲨软科技, All Rights Reserved. 
  */
 
+import cn.khthink.easyapi.api.bean.ActionBean;
 import cn.khthink.easyapi.bean.Request;
 
 /**
@@ -16,8 +17,9 @@ public interface IEasyProtocol {
     /**
      * 协议验证
      *
+     * @param action 处理器信息
      * @param request 请求
      * @return boolean
      */
-    boolean verify(Request request);
+    boolean verify(ActionBean action,Request request);
 }

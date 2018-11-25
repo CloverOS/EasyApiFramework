@@ -13,17 +13,17 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
-public class ActionGroup implements Serializable {
+public class ActionGroupBean implements Serializable {
     private String actionGourpName;
     private int power;
-    private List<Action> actionList;
+    private List<ActionBean> actionList;
 
     /**
      * 添加action到组
      *
      * @param action 处理器
      */
-    public void addAction(Action action) {
+    public void addAction(ActionBean action) {
         actionList.add(action);
     }
 }
