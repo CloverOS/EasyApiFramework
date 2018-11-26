@@ -13,21 +13,21 @@ public @interface EnableRedis {
     /**
      * 地址
      *
-     * @return
+     * @return String
      */
     String host() default "localhost";
 
     /**
      * 端口
      *
-     * @return
+     * @return int
      */
     int port() default 6379;
 
     /**
      * 密码
      *
-     * @return
+     * @return String
      */
     String passwd() default "";
 }
