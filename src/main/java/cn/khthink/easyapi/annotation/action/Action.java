@@ -69,9 +69,9 @@ public @interface Action {
     /**
      * 是否开启接口缓存
      *
-     * @return boolean
+     * @return ActionCache
      */
-    ActionCache cache();
+    ActionCache cache() default @ActionCache;
 
     /**
      * 是否开启session验证
