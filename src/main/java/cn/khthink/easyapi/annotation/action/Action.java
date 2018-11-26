@@ -1,5 +1,7 @@
 package cn.khthink.easyapi.annotation.action;
 
+import cn.khthink.easyapi.annotation.config.cache.ActionCache;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -53,7 +55,7 @@ public @interface Action {
     /**
      * 处理器参数描述
      *
-     * @return  ActionParam[]
+     * @return ActionParam[]
      */
     ActionParam[] params() default {};
 
@@ -69,7 +71,7 @@ public @interface Action {
      *
      * @return boolean
      */
-    boolean isCache() default false;
+    ActionCache cache();
 
     /**
      * 是否开启session验证

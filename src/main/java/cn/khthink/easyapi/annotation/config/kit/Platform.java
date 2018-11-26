@@ -9,4 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Platform {
     boolean value() default true;
+
+    String key() default "";
 }

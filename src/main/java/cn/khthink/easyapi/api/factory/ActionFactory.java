@@ -63,6 +63,6 @@ public class ActionFactory {
                 returnparams[i] = new ActionParamBean(returnParam[i]);
             }
         }
-        return new ActionBean(actionInfo.actionName(), new UriInfo(actionInfo.actionTag(), actionInfo.actionName()), actionInfo.actionDesc(), actionInfo.Auther(), new Group(actionInfo.group().power(), actionInfo.group().groupName()), actionParams, returnparams, actionInfo.isCache(), actionInfo.isSessionOpen(), actionInfo.isToken());
+        return new ActionBean(actionInfo.actionName(), new UriInfo(actionInfo.actionTag(), actionInfo.actionName()), actionInfo.actionDesc(), actionInfo.Auther(), new Group(actionInfo.group().power(), actionInfo.group().groupName()), actionParams, returnparams, actionInfo.cache(), actionInfo.isSessionOpen(), actionInfo.isToken());
     }
 }

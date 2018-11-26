@@ -3,10 +3,6 @@ package cn.khthink.easyapi.kit;
 import cn.khthink.easyapi.config.CoreConfig;
 import lombok.extern.slf4j.Slf4j;
 
-/*
-    Create by KH at 2017/10/18 14:22 
-	CopyRight © 2016-2018 鲨软科技, All Rights Reserved. 
- */
 
 /**
  * 日志组件
@@ -81,7 +77,6 @@ public class EasyLogger {
             }
             log.info(g.toString());
             log.info(msg.substring(0, n));
-            log.info(g.toString());
         }
     }
 }

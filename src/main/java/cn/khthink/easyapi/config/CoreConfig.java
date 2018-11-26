@@ -262,7 +262,7 @@ public class CoreConfig extends Config {
             if (annotation instanceof ActionPackage) {
                 actionPackage = ((ActionPackage) annotation).value();
             } else if (annotation instanceof SessionOpen) {
-                enableSessionVerify = true;
+                enableSessionVerify = ((SessionOpen) annotation).value();
             } else if (annotation instanceof Charset) {
                 charset = ((Charset) annotation).value();
             } else if (annotation instanceof Limit) {

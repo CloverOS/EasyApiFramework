@@ -5,6 +5,7 @@ package cn.khthink.easyapi.api.bean;
 	CopyRight © 2016-2018 鲨软科技, All Rights Reserved. 
  */
 
+import cn.khthink.easyapi.annotation.config.cache.ActionCache;
 import cn.khthink.easyapi.bean.UriInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +25,7 @@ public class ActionBean {
     private Group group;
     private ActionParamBean[] actionParam;
     private ActionParamBean[] returnParam;
-    private boolean isCache;
+    private ActionCache cache;
     private boolean isSessionOpen;
     private boolean isToken;
 
