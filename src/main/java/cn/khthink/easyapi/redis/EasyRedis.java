@@ -232,5 +232,18 @@ public class EasyRedis {
         }
     }
 
-
+    /**
+     * 删除键值对
+     *
+     * @param jedis 实例
+     * @param key   键
+     * @return 是否删除
+     */
+    public boolean del(Jedis jedis, String key) {
+        Long del = jedis.del(key);
+        if (isAutoRelease) {
+            releaseJedis(jedis);
+        }
+        return del > 0;
+    }
 }

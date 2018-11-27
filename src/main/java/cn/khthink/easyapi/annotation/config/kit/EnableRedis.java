@@ -11,6 +11,13 @@ public @interface EnableRedis {
     boolean value() default false;
 
     /**
+     * 是否开启Session支持
+     *
+     * @return boolean
+     */
+    boolean isSessionSupport() default true;
+
+    /**
      * 地址
      *
      * @return String

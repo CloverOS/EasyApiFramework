@@ -146,6 +146,11 @@ public class CoreConfig extends Config {
     public static boolean enableRedis;
 
     /**
+     * 是否开启RedisSession组件
+     */
+    public static boolean enableRedisSession;
+
+    /**
      * 上传组件配置
      */
     /**
@@ -281,6 +286,9 @@ public class CoreConfig extends Config {
                 redisAds = ((EnableRedis) annotation).host();
                 redisPasswd = ((EnableRedis) annotation).passwd();
                 redisPort = ((EnableRedis) annotation).port();
+                if (enableRedis) {
+                    enableRedisSession = ((EnableRedis) annotation).isSessionSupport();
+                }
             } else if (annotation instanceof WebHost) {
                 webHost = ((WebHost) annotation).host();
             } else if (annotation instanceof FileUpload) {
@@ -313,6 +321,7 @@ public class CoreConfig extends Config {
             enableVerifyParamter = true;
             enableDatabase = true;
             enableRedis = false;
+            enableRedisSession = false;
             redisAds = Constant.LOCALHOST;
             redisPasswd = null;
             redisPort = 6379;

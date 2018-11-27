@@ -54,7 +54,7 @@ public class EasySessionKit {
      */
     public void initSessionKit() {
         EasyLogger.info("--->初始化Session组件");
-        if (CoreConfig.enableRedis) {
+        if (CoreConfig.enableRedisSession) {
             initSessionRedisKit();
         } else {
             initSessionFileKit();
@@ -199,7 +199,7 @@ public class EasySessionKit {
      * @return session密钥
      */
     public synchronized String createSession(String data, long millseconds) {
-        if (CoreConfig.enableRedis) {
+        if (CoreConfig.enableRedisSession) {
             String session = UUID.randomUUID().toString();
             Jedis jedis = EasyRedis.getInstance().getJedis(Constant.SESSION_REDIS, true);
             EasyRedis.getInstance().set(jedis, Constant.EASY_SESSION + session, data, EasyRedis.NX, EasyRedis.PX, millseconds);
@@ -218,7 +218,7 @@ public class EasySessionKit {
      * @return boolean
      */
     public boolean setSession(String session, String data, long millseconds) {
-        if (CoreConfig.enableRedis) {
+        if (CoreConfig.enableRedisSession) {
             Jedis jedis = EasyRedis.getInstance().getJedis(Constant.SESSION_REDIS, true);
             EasyRedis.getInstance().set(jedis, session, data, EasyRedis.NX, EasyRedis.PX, millseconds);
             return true;
@@ -266,7 +266,7 @@ public class EasySessionKit {
      * @return String session数据
      */
     public String getSession(String session) {
-        if (CoreConfig.enableRedis) {
+        if (CoreConfig.enableRedisSession) {
             Jedis jedis = EasyRedis.getInstance().getJedis(Constant.SESSION_REDIS, true);
             return EasyRedis.getInstance().getValue(jedis, Constant.EASY_SESSION + session);
         } else {
@@ -304,6 +304,21 @@ public class EasySessionKit {
      * @return 是否成功删除
      */
     public boolean delSession(String session) {
+        if (CoreConfig.enableRedisSession) {
+            Jedis jedis = EasyRedis.getInstance().getJedis(Constant.SESSION_REDIS, true);
+            return EasyRedis.getInstance().del(jedis, Constant.EASY_SESSION + session);
+        } else {
+            return delSessionByFile(session);
+        }
+    }
+
+    /**
+     * 销毁session
+     *
+     * @param session session密钥
+     * @return 是否成功删除
+     */
+    private boolean delSessionByFile(String session) {
         File sessionFile = getSessionFile(session);
         if (sessionFile != null) {
             if (sessionFile.exists()) {
@@ -347,7 +362,7 @@ public class EasySessionKit {
      * @param isClear 是否清空session
      */
     public void destory(boolean isClear) {
-        if (CoreConfig.enableRedis) {
+        if (CoreConfig.enableRedisSession) {
             if (isClear) {
                 Jedis jedis = EasyRedis.getInstance().getJedis(Constant.SESSION_REDIS, true);
                 Set<String> keys = jedis.keys(Constant.EASY_SESSION + "*");
