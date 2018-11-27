@@ -1,9 +1,5 @@
 package cn.khthink.easyapi.action;
 
-/*
-    Create by KH at 2017/10/26 23:02 
-	CopyRight © 2016-2018 鲨软科技, All Rights Reserved. 
- */
 
 import cn.khthink.easyapi.bean.Request;
 import cn.khthink.easyapi.config.CoreConfig;
@@ -37,22 +33,35 @@ public class ProxyAction implements Action, EasyResponse {
 
     @Override
     public void processData(Request request) throws Exception {
-        if (EasyRequestKit.isLimit(request)) {
-            EasyRequestKit.addRequest(request);
-            if (CoreConfig.verify(request)) {
-                EasyActionPool.getInstance().getAction(request.getUriInfo()).verifyParameter(request);
+        if (CoreConfig.enableRequestLimit) {
+            if (EasyRequestKit.isLimit(request)) {
+                EasyRequestKit.addRequest(request);
+                process(request);
             } else {
                 try {
-                    sendEmptyDataMsg(request, PROTOCOLERROR, ResultCode.PROTOCOLERROR);
+                    sendEmptyDataMsg(request, LIMITERROR, ResultCode.LIMITERROR);
                 } catch (IOException e) {
-                    EasyLogger.info(PROTOCOLERROR, e);
+                    EasyLogger.info(LIMITERROR, e);
                 }
             }
         } else {
+            process(request);
+        }
+    }
+
+    /**
+     * 处理请求
+     *
+     * @param request 请求
+     */
+    private void process(Request request) throws Exception {
+        if (CoreConfig.verify(request)) {
+            EasyActionPool.getInstance().getAction(request.getUriInfo()).verifyParameter(request);
+        } else {
             try {
-                sendEmptyDataMsg(request, LIMITERROR, ResultCode.LIMITERROR);
+                sendEmptyDataMsg(request, PROTOCOLERROR, ResultCode.PROTOCOLERROR);
             } catch (IOException e) {
-                EasyLogger.info(LIMITERROR, e);
+                EasyLogger.info(PROTOCOLERROR, e);
             }
         }
     }
