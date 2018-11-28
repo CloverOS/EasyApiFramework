@@ -75,7 +75,7 @@ public class EasyRedis {
      * @return JedisPool
      */
     public JedisPool getJedisPool(int database) {
-        return jedisPoolMap.getOrDefault(database, getJedisPool(Protocol.DEFAULT_PORT));
+        return jedisPoolMap.getOrDefault(database, jedisPoolMap.get(Protocol.DEFAULT_DATABASE));
     }
 
     /**
