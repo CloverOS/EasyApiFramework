@@ -76,7 +76,7 @@ public class EasyLogger {
                 g.append("-");
             }
             log.info(g.toString());
-            log.info(msg.substring(0, n));
+            log.info(msg);
         }
     }
 }
