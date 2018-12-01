@@ -1,7 +1,7 @@
 package cn.khthink.easyapi.factory.request;
 
 import cn.khthink.easyapi.action.RequestData;
-import cn.khthink.easyapi.kit.FileKit;
+import cn.khthink.easyapi.kit.io.FileKit;
 import com.alibaba.fastjson.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;

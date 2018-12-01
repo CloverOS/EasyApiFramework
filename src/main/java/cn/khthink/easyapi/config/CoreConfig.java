@@ -6,14 +6,25 @@ package cn.khthink.easyapi.config;
  */
 
 import cn.khthink.easyapi.action.EasyActionPool;
-import cn.khthink.easyapi.annotation.config.*;
-import cn.khthink.easyapi.annotation.config.kit.*;
+import cn.khthink.easyapi.annotation.config.EasyApiConfig;
+import cn.khthink.easyapi.annotation.config.EnableAutoConfig;
+import cn.khthink.easyapi.annotation.config.Log;
+import cn.khthink.easyapi.annotation.config.protocol.EasyProtocol;
+import cn.khthink.easyapi.annotation.config.schedule.EnableEasyScheduleTask;
+import cn.khthink.easyapi.annotation.config.web.*;
+import cn.khthink.easyapi.annotation.kit.FileUpload;
+import cn.khthink.easyapi.annotation.kit.database.DataBase;
+import cn.khthink.easyapi.annotation.kit.database.EnableRedis;
+import cn.khthink.easyapi.annotation.kit.database.HikariProperties;
+import cn.khthink.easyapi.annotation.kit.database.Mybatis;
+import cn.khthink.easyapi.annotation.kit.protocol.SessionOpen;
 import cn.khthink.easyapi.api.bean.ActionBean;
 import cn.khthink.easyapi.bean.Request;
-import cn.khthink.easyapi.database.mybatis.EasyMybatis;
+import cn.khthink.easyapi.kit.database.mybatis.EasyMybatis;
 import cn.khthink.easyapi.kit.EasyLogger;
-import cn.khthink.easyapi.kit.EasyRequestKit;
-import cn.khthink.easyapi.kit.EasySessionKit;
+import cn.khthink.easyapi.kit.communication.EasyRequestKit;
+import cn.khthink.easyapi.kit.protocol.EasySessionKit;
+import cn.khthink.easyapi.kit.schedule.EasyScheduleTaskKit;
 import cn.khthink.easyapi.protocol.IEasyProtocol;
 import cn.khthink.easyapi.redis.EasyRedis;
 import cn.khthink.easyapi.tools.ClassScannerTools;
@@ -69,11 +80,6 @@ public class CoreConfig extends Config {
      * 协议
      */
     private static IEasyProtocol protocol;
-
-    /**
-     * 处理器包路径
-     */
-    public static String[] actionPackage;
 
     /**
      * 自定义配置类
@@ -173,6 +179,16 @@ public class CoreConfig extends Config {
      */
     public static int maxRequestSize;
 
+    /**
+     * 是否开启定时任务组件
+     */
+    private static boolean enableEasyScheduleTask;
+
+    /**
+     * 项目中全部类
+     */
+    public static List<Class> classList = new ArrayList<>();
+
     private static class Config {
         private static CoreConfig instatnce = new CoreConfig();
     }
@@ -224,6 +240,9 @@ public class CoreConfig extends Config {
             if (enableSessionVerify) {
                 EasySessionKit.getInstance().initSessionKit();
             }
+            if (enableEasyScheduleTask) {
+                EasyScheduleTaskKit.getInstance().init();
+            }
             EasyLogger.info("--->初始化处理池");
             EasyActionPool.getInstance().init();
         }
@@ -238,6 +257,7 @@ public class CoreConfig extends Config {
         ClassScannerTools.getInstance().getClazzs(null, allClassName);
         for (String s : allClassName) {
             try {
+                classList.add(Class.forName(s));
                 if (Class.forName(s).getAnnotation(EasyApiConfig.class) != null) {
                     if (checkScanSuperType(s, Constant.BASEEASYCONFIG)) {
                         baseEasyConfig = (BaseEasyConfig) Class.forName(s).newInstance();
@@ -258,15 +278,13 @@ public class CoreConfig extends Config {
     /**
      * 扫描注解配置
      *
-     * @param config
+     * @param config 配置类
      */
     private void initScan(BaseEasyConfig config) {
         autoConfig(config);
         Annotation[] annotations = config.getClass().getAnnotations();
         for (Annotation annotation : annotations) {
-            if (annotation instanceof ActionPackage) {
-                actionPackage = ((ActionPackage) annotation).value();
-            } else if (annotation instanceof SessionOpen) {
+            if (annotation instanceof SessionOpen) {
                 enableSessionVerify = ((SessionOpen) annotation).value();
             } else if (annotation instanceof Charset) {
                 charset = ((Charset) annotation).value();
@@ -302,6 +320,8 @@ public class CoreConfig extends Config {
                 mappers = ((Mybatis) annotation).mappers();
             } else if (annotation instanceof HikariProperties) {
                 hikariProperties = "/" + ((HikariProperties) annotation).value() + ".properties";
+            } else if (annotation instanceof EnableEasyScheduleTask) {
+                enableEasyScheduleTask = ((EnableEasyScheduleTask) annotation).enable();
             }
         }
     }
@@ -309,7 +329,7 @@ public class CoreConfig extends Config {
     /**
      * 自动配置默认
      *
-     * @param config
+     * @param config 配置类
      */
     private void autoConfig(BaseEasyConfig config) {
         if (config.getClass().getAnnotation(EnableAutoConfig.class) != null) {
@@ -334,6 +354,7 @@ public class CoreConfig extends Config {
             mybatisConfig = "";
             mappers = new String[]{};
             hikariProperties = "/EasyApi.properties";
+            enableEasyScheduleTask = false;
         }
     }
 
@@ -405,6 +426,9 @@ public class CoreConfig extends Config {
         }
         if (enableRequestLimit) {
             EasyRequestKit.getInstance().destory();
+        }
+        if (enableEasyScheduleTask) {
+            EasyScheduleTaskKit.getInstance().shotdownNow();
         }
         try {
             //注销驱动防止内存泄漏

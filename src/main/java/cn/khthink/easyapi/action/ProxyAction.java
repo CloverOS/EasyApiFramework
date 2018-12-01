@@ -5,8 +5,8 @@ import cn.khthink.easyapi.bean.Request;
 import cn.khthink.easyapi.config.CoreConfig;
 import cn.khthink.easyapi.config.ResultCode;
 import cn.khthink.easyapi.kit.EasyLogger;
-import cn.khthink.easyapi.kit.EasyRequestKit;
-import cn.khthink.easyapi.kit.EasyResponse;
+import cn.khthink.easyapi.kit.communication.EasyRequestKit;
+import cn.khthink.easyapi.kit.communication.EasyResponse;
 
 import java.io.IOException;
 

@@ -63,26 +63,20 @@ public class EasyActionPool {
      */
     public void init() {
         addAction(Constant.NULLACTION, new NullEasyAction());
-        List<String> clazzNames = new ArrayList<>();
-        if (CoreConfig.actionPackage != null) {
-            for (String name : CoreConfig.actionPackage) {
-                ClassScannerTools.getInstance().getClazzs(name, clazzNames);
-            }
-            for (String clazz : clazzNames) {
-                if (checkAction(clazz)) {
-                    try {
-                        BaseEasyAction c = (BaseEasyAction) Class.forName(clazz).newInstance();
-                        UriInfo info = getActionInfo(c);
-                        if (info != null) {
-                            addAction(info.getInfo(), c);
-                        }
-                    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-                        EasyLogger.trace(e);
+        for (Class clazz : CoreConfig.classList) {
+            if (checkAction(clazz)) {
+                try {
+                    BaseEasyAction c = (BaseEasyAction) clazz.newInstance();
+                    UriInfo info = getActionInfo(c);
+                    if (info != null) {
+                        addAction(info.getInfo(), c);
                     }
+                } catch (InstantiationException | IllegalAccessException e) {
+                    EasyLogger.trace(e);
                 }
             }
-            EasyLogger.info("--->载入处理器完毕");
         }
+        EasyLogger.info("--->载入处理器完毕");
     }
 
     /**
@@ -130,6 +124,19 @@ public class EasyActionPool {
         } catch (ClassNotFoundException e) {
             return false;
         }
+    }
+
+    /**
+     * 检查是否为处理器子类
+     *
+     * @param clazz 类
+     * @return boolean
+     */
+    private boolean checkAction(Class clazz) {
+        if (clazz.getSuperclass() == null) {
+            return false;
+        }
+        return clazz.getSuperclass().getName().equals(Constant.EASYACTION);
     }
 
     /**

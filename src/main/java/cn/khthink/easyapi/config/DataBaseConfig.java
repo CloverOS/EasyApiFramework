@@ -6,7 +6,7 @@ package cn.khthink.easyapi.config;
  */
 
 
-import cn.khthink.easyapi.database.hikari.Hikari;
+import cn.khthink.easyapi.kit.database.hikari.Hikari;
 import cn.khthink.easyapi.kit.EasyLogger;
 
 /**

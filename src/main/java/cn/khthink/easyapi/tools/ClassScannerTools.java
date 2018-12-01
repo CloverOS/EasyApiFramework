@@ -18,6 +18,8 @@ import java.util.jar.JarInputStream;
  * @author kh
  */
 public class ClassScannerTools {
+    private static final String OS_NAME = "os.name";
+    private static final String WINDOWS = "windows";
 
     private ClassLoader classLoader;
 
@@ -44,7 +46,11 @@ public class ClassScannerTools {
         URL url;
         boolean isRoot = packageName == null || "".equals(packageName);
         if (isRoot) {
-            url = classLoader.getResource(File.separator);
+            if (System.getProperty(OS_NAME).toLowerCase().startsWith(WINDOWS)) {
+                url = classLoader.getResource("");
+            } else {
+                url = classLoader.getResource(File.separator);
+            }
         } else {
             url = classLoader.getResource(packageName.replaceAll("\\.", "/"));
         }
