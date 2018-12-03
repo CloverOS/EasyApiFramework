@@ -22,4 +22,5 @@ public class EasyScheduleTask {
     private long period;
     private TimeUnit timeUnit;
     private EasyScheduleTaskKit.ScheduleType scheduleType;
+    private String cron;
 }

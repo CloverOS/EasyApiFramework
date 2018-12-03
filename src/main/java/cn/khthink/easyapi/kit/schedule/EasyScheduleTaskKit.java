@@ -4,14 +4,16 @@ import cn.khthink.easyapi.annotation.kit.schedule.EasySchedule;
 import cn.khthink.easyapi.annotation.kit.schedule.ScheduleTask;
 import cn.khthink.easyapi.config.CoreConfig;
 import cn.khthink.easyapi.kit.EasyLogger;
+import cn.khthink.easyapi.kit.schedule.support.CronSequenceGenerator;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -57,6 +59,7 @@ public class EasyScheduleTaskKit {
                                 .period(scheduleTask.period())
                                 .timeUnit(scheduleTask.timeUnit())
                                 .scheduleType(scheduleTask.scheduleType())
+                                .cron(scheduleTask.cron())
                                 .task(() -> {
                                     try {
                                         method.invoke(taskClass.newInstance());
@@ -89,6 +92,16 @@ public class EasyScheduleTaskKit {
                 break;
             case WithFixedDelay:
                 scheduledThreadPoolExecutor.scheduleWithFixedDelay(easyScheduleTask.getTask(), easyScheduleTask.getInitialDelay(), easyScheduleTask.getDelay(), easyScheduleTask.getTimeUnit());
+                break;
+            case PeriodAtDate:
+                if (!easyScheduleTask.getCron().isEmpty()) {
+                    CronSequenceGenerator cronSequenceGenerator = new CronSequenceGenerator(easyScheduleTask.getCron());
+                    Date next = cronSequenceGenerator.next(new Date());
+                    long initialDelay = next.getTime() - System.currentTimeMillis();
+                    Date next1 = cronSequenceGenerator.next(next);
+                    long delay = next1.getTime() - next.getTime();
+                    scheduledThreadPoolExecutor.scheduleWithFixedDelay(easyScheduleTask.getTask(), initialDelay, delay, TimeUnit.MILLISECONDS);
+                }
                 break;
             default:
                 scheduledThreadPoolExecutor.schedule(easyScheduleTask.getTask(), easyScheduleTask.getDelay(), easyScheduleTask.getTimeUnit());
@@ -153,6 +166,10 @@ public class EasyScheduleTaskKit {
          * 创建并执行在给定的初始延迟之后首先启用的定期动作，随后在一个执行的终止和下一个执行的开始之间给定的延迟。
          */
         WithFixedDelay,
+        /**
+         * 指定执行年月日指定日期周期任务
+         */
+        PeriodAtDate,
         /**
          * 创建并执行在给定延迟后启用的单次操作。
          */

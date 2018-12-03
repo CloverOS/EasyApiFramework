@@ -47,6 +47,13 @@ public @interface ScheduleTask {
     TimeUnit timeUnit() default TimeUnit.SECONDS;
 
     /**
+     * cron表达式
+     *
+     * @return String
+     */
+    String cron() default "";
+
+    /**
      * 任务类型
      *
      * @return 任务类型

@@ -6,6 +6,7 @@ package cn.khthink.easyapi.test;
  */
 
 
+import cn.khthink.easyapi.kit.schedule.support.CronSequenceGenerator;
 import cn.khthink.easyapi.tools.ClassScannerTools;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import java.util.*;
 /**
  * 测试类
  *
- * @author
+ * @author kh
  */
 public class JunitTest {
 
@@ -38,9 +39,18 @@ public class JunitTest {
             System.out.println(s);
         }
     }
+
     @Test
-    public void testProperties(){
+    public void testProperties() {
         Properties properties = new Properties();
 
+    }
+
+    @Test
+    public void testCron() {
+        //每周一凌晨0点
+        CronSequenceGenerator cronSequenceGenerator = new CronSequenceGenerator("0 0 0 * * 1");
+        Date next = cronSequenceGenerator.next(new Date());
+        System.out.println(next);
     }
 }
