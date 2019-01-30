@@ -55,6 +55,7 @@ public class EasyFilter implements Filter {
         try {
             ProxyAction.getInstance().processData(request);
         } catch (Exception e) {
+            resp.getWriter().print("{\"msg\":\"处理器无法处理请求\",\"code\": 500}");
             EasyLogger.info("处理器无法处理请求", e);
         }
     }

@@ -11,10 +11,10 @@ import cn.khthink.easyapi.bean.Request;
 import cn.khthink.easyapi.config.Constant;
 import cn.khthink.easyapi.config.CoreConfig;
 import cn.khthink.easyapi.config.ResultCode;
-import cn.khthink.easyapi.kit.database.mybatis.EasyMybatis;
 import cn.khthink.easyapi.kit.communication.EasyResponse;
-import cn.khthink.easyapi.kit.protocol.EasySessionKit;
 import cn.khthink.easyapi.kit.database.Easybatis;
+import cn.khthink.easyapi.kit.database.mybatis.EasyMybatis;
+import cn.khthink.easyapi.kit.protocol.EasySessionKit;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.session.SqlSession;
@@ -43,9 +43,9 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
     protected String sessionKey;
 
     /**
-     * Mybatis SqlSession
+     * Mybatis SqlSession Thread-Safe
      */
-    private SqlSession sqlSession;
+    private ThreadLocal<SqlSession> sqlSessionThreadLocal = new ThreadLocal<>();
 
     /**
      * 验证参数
@@ -57,9 +57,7 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
         if (CoreConfig.enableVerifyParamter) {
             if (isPass(request)) {
                 processData(request);
-                if (sqlSession != null) {
-                    closeSqlSession();
-                }
+                closeSqlSession();
             }
         }
     }
@@ -147,16 +145,13 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
 
     @Override
     public SqlSession getSqlSession() {
-        if (sqlSession == null) {
-            sqlSession = EasyMybatis.getInstance().getSqlSession();
-        }
-        return sqlSession;
+        return getSqlSession(true);
     }
 
     @Override
     public SqlSession getSqlSession(boolean isAutoCommit) {
-        sqlSession = EasyMybatis.getInstance().getSqlSession(isAutoCommit);
-        return sqlSession;
+        sqlSessionThreadLocal.set(EasyMybatis.getInstance().getSqlSession(isAutoCommit));
+        return sqlSessionThreadLocal.get();
     }
 
     @Override
@@ -166,16 +161,16 @@ public abstract class BaseEasyAction implements Action, EasyResponse, Easybatis 
 
     @Override
     public void commitSqlSession() {
-        if (sqlSession != null) {
-            sqlSession.commit();
+        if (sqlSessionThreadLocal != null) {
+            sqlSessionThreadLocal.get().commit();
         }
     }
 
     @Override
     public void closeSqlSession() {
-        if (sqlSession != null) {
-            sqlSession.close();
-            sqlSession = null;
+        if (sqlSessionThreadLocal.get() != null) {
+            sqlSessionThreadLocal.get().close();
+            sqlSessionThreadLocal.remove();
         }
     }
 }
